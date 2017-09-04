@@ -50,6 +50,7 @@ imgs = np.array(imgs).astype(np.float32)
 assert(imgs.shape == (100, 100, 100, 3))
 plt.figure(figsize=(10, 10))
 plt.imshow(utils.montage(imgs, saveto='dataset.png'))
+plt.title('Dataset of 100 images')
 #plt.show()
 
 ## Get the mean image using TensoreFlow
@@ -64,7 +65,34 @@ mean_img = sess.run(mean_img_op)
 assert(mean_img.shape == (100, 100, 3))
 plt.figure(figsize=(10, 10))
 plt.imshow(mean_img)
+plt.title('Mean of 100 images')
 plt.imsave(arr=mean_img, fname='mean.png')
+#plt.show()
+
+## calculate standard deviation
+## Create a tensorflow operation to give you the standard deviation
+# First compute the difference of every image with a
+# 4 dimensional mean image shaped 1 x H x W x C
+mean_img_4d = np.array(mean_img)
+
+subtraction = imgs - mean_img_4d
+# Now compute the standard deviation by calculating the
+# square root of the expected squared differences
+std_img_op = tf.sqrt(tf.reduce_mean(subtraction * subtraction, axis=0))
+# Now calculate the standard deviation using your session
+std_img = sess.run(std_img_op)
+
+# Then plot the resulting standard deviation image:
+# Make sure the std image is the right size!
+assert(std_img.shape == (100, 100) or std_img.shape == (100, 100, 3))
+plt.figure(figsize=(10, 10))
+std_img_show = std_img / np.max(std_img)
+plt.title('Standard Deviation of 100 images')
+#print(np.max(std_img))
+#print(std_img.shape)
+plt.imshow(std_img_show)
+plt.imsave(arr=std_img_show, fname='std.png')
 plt.show()
+
 
 
