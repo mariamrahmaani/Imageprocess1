@@ -92,7 +92,31 @@ plt.title('Standard Deviation of 100 images')
 #print(std_img.shape)
 plt.imshow(std_img_show)
 plt.imsave(arr=std_img_show, fname='std.png')
+#plt.show()
+
+## Normalize the Dataset
+norm_imgs_op = tf.abs((imgs - mean_img_4d)/std_img)
+
+norm_imgs = sess.run(norm_imgs_op)
+#print(np.min(norm_imgs), np.max(norm_imgs))
+#print(imgs.dtype)
+
+# Plot the resulting normalized dataset montage:
+# Make sure we have a 100 x 100 x 100 x 3 dimension array
+assert(norm_imgs.shape == (100, 100, 100, 3))
+plt.figure(figsize=(10, 10))
+plt.title('Normalized image')
+plt.imshow(utils.montage(norm_imgs, 'normalized.png'))
+# Apply another type of normalization to 0-1 just for the purposes of plotting the image. 
+# If we didn't do this, the range of our values would be somewhere between -1 and 1, and matplotlib would not be able to interpret the entire range of values. 
+# By rescaling our -1 to 1 valued images to 0-1, we can visualize it better.
+
+norm_imgs_show = (norm_imgs - np.min(norm_imgs)) / (np.max(norm_imgs) - np.min(norm_imgs))
+plt.figure(figsize=(10, 10))
+plt.title('Normalized image with 0-1 rescaling')
+plt.imshow(utils.montage(norm_imgs_show, 'normalized.png'))
 plt.show()
+
 
 
 
