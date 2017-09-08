@@ -74,6 +74,8 @@ plt.imsave(arr=mean_img, fname='mean.png')
 # First compute the difference of every image with a
 # 4 dimensional mean image shaped 1 x H x W x C
 mean_img_4d = np.array(mean_img)
+print("mean_img_4d")
+print(mean_img_4d.shape)
 
 subtraction = imgs - mean_img_4d
 # Now compute the standard deviation by calculating the
@@ -110,12 +112,38 @@ plt.imshow(utils.montage(norm_imgs, 'normalized.png'))
 # Apply another type of normalization to 0-1 just for the purposes of plotting the image. 
 # If we didn't do this, the range of our values would be somewhere between -1 and 1, and matplotlib would not be able to interpret the entire range of values. 
 # By rescaling our -1 to 1 valued images to 0-1, we can visualize it better.
-
 norm_imgs_show = (norm_imgs - np.min(norm_imgs)) / (np.max(norm_imgs) - np.min(norm_imgs))
 plt.figure(figsize=(10, 10))
 plt.title('Normalized image with 0-1 rescaling')
 plt.imshow(utils.montage(norm_imgs_show, 'normalized.png'))
 plt.show()
+
+## Convolve with a Gabor filter
+ksize = 32
+kernel = np.concatenate([utils.gabor(ksize)[:, :, np.newaxis] for i in range(3)], axis=2)
+
+print(kernel.shape)
+                     
+# Now make the kernels into the shape: [ksize, ksize, 3, 1]:
+kernel_4d = np.reshape(kernel, (ksize, ksize, 3, 1))
+
+print(kernel_4d.shape)
+
+assert(kernel_4d.shape == (ksize, ksize, 3, 1))
+
+plt.figure(figsize=(5, 5))
+plt.imshow(kernel_4d[:, :, 0, 0], cmap='gray')
+plt.imsave(arr=kernel_4d[:, :, 0, 0], fname='kernel.png', cmap='gray')
+plt.show()
+# Perform the convolution with the 4d tensors:
+
+#convolved = utils.convolve(...
+
+# convolved_show = (convolved - np.min(convolved)) / (np.max(convolved) - np.min(convolved))
+# print(convolved_show.shape)
+#plt.figure(figsize=(10, 10))
+#plt.imshow(utils.montage(convolved_show[..., 0], 'convolved.png'), cmap='gray')
+
 
 
 
