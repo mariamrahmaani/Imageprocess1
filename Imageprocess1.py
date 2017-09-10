@@ -142,12 +142,38 @@ plt.show()
 # Perform the convolution with the 4d tensors:
 
 convolved = utils.convolve(imgs, kernel_4d)
-
+print('convolved.shape:')
+print(convolved.shape)
 convolved_show = (convolved - np.min(convolved)) / (np.max(convolved) - np.min(convolved))
 print(convolved_show.shape)
 plt.figure(figsize=(10, 10))
+
 plt.imshow(utils.montage(convolved_show[..., 0], 'convolved.png'), cmap='gray')
 plt.show()
+
+# Sort the convolved images
+# First flatten our convolved images so instead of many 3d images we have many 1d vectors.
+# This should convert our 4d representation of N x H x W x C to a
+# 2d representation of N x (H*W*C)
+flattened = tf.reshape(convolved,[100,10000])
+assert(flattened.get_shape().as_list() == [100, 10000])
+
+# Now calculate some statistics about each of our images
+values = tf.reduce_sum(flattened, axis=1)
+# Then create another operation which sorts those values and then calculate the result:
+idxs_op = tf.nn.top_k(values, k=100)[1]
+idxs = sess.run(idxs_op)
+# Then finally use the sorted indices to sort your images:
+sorted_imgs = np.array([imgs[idx_i] for idx_i in idxs])
+
+# Then plot the resulting sorted dataset montage:
+# Make sure we have a 100 x 100 x 100 x 3 dimension array
+
+assert(sorted_imgs.shape == (100, 100, 100, 3))
+plt.figure(figsize=(10, 10))
+plt.imshow(utils.montage(sorted_imgs, 'sorted.png'))
+plt.show()
+
 
 
 
