@@ -26,7 +26,10 @@ def imcrop_tosquare(img):
     -------
     crop : np.ndarray
         Cropped image.
-    """
+    
+	img.shape returns shape of the image as 3 index tuple like: (256,125,3)
+	img.shape[:2] truncate (256,125,3) to (256,125)
+	"""
     size = np.min(img.shape[:2])
     extra = img.shape[:2] - size
     crop = img
