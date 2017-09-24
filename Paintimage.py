@@ -176,13 +176,37 @@ def normalize_feature_scaling(ys):
     return norm_ys
 	
 def create_nn():
-   tf.reset_default_graph()
-   #Create a placeholder of None x 2 dimensions and dtype tf.float32
-   X = tf.placeholder(dtype=tf.float32, shape=(None, 2))
-   # Create the placeholder, Y, with 3 output dimensions instead of 2.
-   # This will be the output of the network, the R, G, B values.
-   Y = tf.placeholder(dtype=tf.float32, shape=(None, 3))
-   return
+    tf.reset_default_graph()
+    
+	#Create a placeholder of None x 2 dimensions and dtype tf.float32
+    X = tf.placeholder(dtype=tf.float32, shape=(None, 2))
+	
+    # Create the placeholder, Y, with 3 output dimensions instead of 2.
+    # This will be the output of the network, the R, G, B values.
+    Y = tf.placeholder(dtype=tf.float32, shape=(None, 3))
+    
+	# create 6 hidden layers. create a variable to say how many neurons we want for each of the layers
+    # (20 to begin with)
+    n_neurons = 20
+    # Create the first linear + nonlinear layer which will
+    # take the 2 input neurons and fully connects it to 20 neurons.
+    # Use the `utils.linear` function to do this just like before,
+    # but also remember to give names for each layer, such as
+    # "1", "2", ... "5", or "layer1", "layer2", ... "layer6".
+    h1, W1 = linear(X, n_neurons, name="layer1", activation=None, reuse=None)
+    # Create another one:
+    h2, W2 = linear(h1, n_neurons, name="layer2", activation=None, reuse=None)
+    # and four more (or replace all of this with a loop if you can!):
+    h3, W3 = linear(h2, n_neurons, name="layer3", activation=None, reuse=None)
+    h4, W4 = linear(h3, n_neurons, name="layer4", activation=None, reuse=None)
+    h5, W5 = linear(h4, n_neurons, name="layer5", activation=None, reuse=None)
+    h6, W6 = linear(h5, n_neurons, name="layer6", activation=None, reuse=None)
+    # Now, make one last layer to make sure your network has 3 outputs:
+    Y_pred, W7 = linear(h6, 3, activation=None, name='pred')
+    assert(X.get_shape().as_list() == [None, 2])
+    assert(Y_pred.get_shape().as_list() == [None, 3])
+    assert(Y.get_shape().as_list() == [None, 3])
+    return
    
    
 ##########################################
