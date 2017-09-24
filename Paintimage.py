@@ -169,6 +169,14 @@ def normalize_feature_scaling(ys):
     print('np.min(norm_ys): ',np.min(norm_ys), 'np.max(norm_ys): ', np.max(norm_ys))
     return norm_ys
 	
+def create_nn():
+   tf.reset_default_graph()
+   #Create a placeholder of None x 2 dimensions and dtype tf.float32
+   X = tf.placeholder(dtype=tf.float32, shape=(None, 2))
+   # Create the placeholder, Y, with 3 output dimensions instead of 2.
+   # This will be the output of the network, the R, G, B values.
+   Y = tf.placeholder(dtype=tf.float32, shape=(None, 3))
+   return
 ##########################################
 ##########################################
 
@@ -179,3 +187,4 @@ refimage = image_prep("girl.jpg", ".\\img\\")
 xs, ys = split_image(refimage)
 norm_xs = normalize_std_score(xs.astype(np.float32))
 norm_ys = normalize_feature_scaling(ys.astype(np.float32))
+create_nn()
