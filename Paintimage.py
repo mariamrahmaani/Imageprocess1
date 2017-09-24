@@ -49,6 +49,12 @@ except ImportError:
           " notebook inside the directory created by extracting"
           " the zip file or cloning the github repo.")
 
+		  
+		    
+##########################################
+## DEF FUNC BEGIN
+##########################################
+
 # We'll tell matplotlib to inline any drawn figures like so:
 def plot_relu_sigmoid_tanh():
 	plt.style.use('ggplot')
@@ -177,14 +183,25 @@ def create_nn():
    # This will be the output of the network, the R, G, B values.
    Y = tf.placeholder(dtype=tf.float32, shape=(None, 3))
    return
+   
+   
 ##########################################
+## DEF FUNC END
 ##########################################
 
 #linear(x, 2, name=None, activation=None, reuse=None)
 #plot_relu_sigmoid_tanh()
-mul_placeholder()
+#mul_placeholder()
+
+## Change the image size to a 100X100 figure
 refimage = image_prep("girl.jpg", ".\\img\\")
+
+## Put pixel locations and pixel values in xs and xy
 xs, ys = split_image(refimage)
+
+## normalize xs and xy
 norm_xs = normalize_std_score(xs.astype(np.float32))
 norm_ys = normalize_feature_scaling(ys.astype(np.float32))
+
+## Create the neural network
 create_nn()
