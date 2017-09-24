@@ -115,10 +115,10 @@ def image_prep(filename, dirname):
 	img = imresize(img, (100, 100))
 	plt.figure(figsize=(5, 5))
 	plt.imshow(img)
-	plt.show()
+	#plt.show()
 	#save this image as "reference.png"
 	plt.imsave(fname=dirname+"reference.png", arr=img)
-	return
+	return (img)
 
 def split_image(img):
     # We'll first collect all the positions in the image in our list, xs
@@ -134,10 +134,13 @@ def split_image(img):
             xs.append([row_i, col_i])
             # And outputs that the network needs to learn to predict
             ys.append(img[row_i, col_i])
-
     # we'll convert our lists to arrays
     xs = np.array(xs)
     ys = np.array(ys)
+    print('xs',xs)
+    print('ys',ys)
+    print('xs.shape: ',xs.shape)
+    print('ys.shape: ',ys.shape)
     return xs, ys
 	
 def mul_placeholder():
@@ -149,10 +152,30 @@ def mul_placeholder():
 		print(sess.run(y, feed_dict={x: rand_array}))  # Will succeed.
 	return
 	
-#####################
+def normalize_std_score(xs):
+    sess = tf.Session()
+    xs_op = tf.reduce_mean(xs, axis=0)
+    mean_xs = sess.run(xs_op)
+    std_xs_op = tf.abs(tf.sqrt(tf.reduce_mean((xs-mean_xs)*(xs-mean_xs), axis=0)))
+    std_xs = sess.run(std_xs_op)
+    norm_xs = (xs - mean_xs)/std_xs
+    print('norm_value: ',norm_xs)
+    print('np.min(norm_value): ', np.min(norm_xs) , 'np.max(norm_value): ', np.max(norm_xs))
+    assert(np.min(norm_xs) > -3.0 and np.max(norm_xs) < 3.0)
+    return norm_xs
+	
+def normalize_feature_scaling(ys):
+    norm_ys = ys / 255.0
+    print('np.min(norm_ys): ',np.min(norm_ys), 'np.max(norm_ys): ', np.max(norm_ys))
+    return norm_ys
+	
+##########################################
+##########################################
 
 #linear(x, 2, name=None, activation=None, reuse=None)
 #plot_relu_sigmoid_tanh()
 mul_placeholder()
-image_prep("girl.jpg", ".\\img\\")
-
+refimage = image_prep("girl.jpg", ".\\img\\")
+xs, ys = split_image(refimage)
+norm_xs = normalize_std_score(xs.astype(np.float32))
+norm_ys = normalize_feature_scaling(ys.astype(np.float32))
