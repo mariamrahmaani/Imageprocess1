@@ -53,7 +53,7 @@ def build_gif(imgs, interval=0.1, dpi=72,
 
     if save_gif:
         try:
-            ani.save(saveto, writer='imagemagick', dpi=dpi)
+            ani.save(saveto, writer='magick', dpi=dpi)
         except:
             print('You do not have imagemagick installed.\n\nOn OSX ' +
                   'you can install this by first installing homebrew: ' +
