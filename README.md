@@ -1,1 +1,1 @@
-# Imageprocess1
+# Convolutional Neural Network using Gabor Kernel
